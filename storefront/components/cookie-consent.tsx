@@ -7,13 +7,21 @@ import { initAnalytics } from '@/lib/analytics'
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false)
 
+  console.log('[CookieConsent] render, visible:', visible)
+
   const checkConsent = useCallback(() => {
-    if (getConsent() === null) {
+    const consent = getConsent()
+    console.log('[CookieConsent] checkConsent:', consent)
+    if (consent === null) {
+      console.log('[CookieConsent] No consent found, showing banner')
       setVisible(true)
+    } else {
+      console.log('[CookieConsent] Consent exists:', consent)
     }
   }, [])
 
   useEffect(() => {
+    console.log('[CookieConsent] useEffect mounted')
     checkConsent()
 
     const handleManageCookies = () => {
@@ -25,17 +33,23 @@ export default function CookieConsent() {
   }, [checkConsent])
 
   const handleAccept = () => {
+    console.log('[CookieConsent] Accept clicked')
     setConsent(true)
     setVisible(false)
     initAnalytics()
   }
 
   const handleDecline = () => {
+    console.log('[CookieConsent] Decline clicked')
     setConsent(false)
     setVisible(false)
   }
 
-  if (!visible) return null
+  if (!visible) {
+    console.log('[CookieConsent] Not visible, returning null')
+    return null
+  }
+  console.log('[CookieConsent] Rendering banner')
 
   return (
     <div className="fixed bottom-0 inset-x-0 z-50 animate-fade-in">

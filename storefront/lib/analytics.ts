@@ -62,10 +62,12 @@ class AnalyticsTracker {
   }
 
   init(): void {
-    if (this.isInitialized) return
-    if (!this.storeId || !this.endpoint) return
-    if (!hasAnalyticsConsent()) return
+    console.log('[Analytics] init called', { storeId: this.storeId, endpoint: this.endpoint, isInitialized: this.isInitialized, consent: hasAnalyticsConsent() })
+    if (this.isInitialized) { console.log('[Analytics] Already initialized'); return }
+    if (!this.storeId || !this.endpoint) { console.log('[Analytics] SKIPPED: missing storeId or endpoint'); return }
+    if (!hasAnalyticsConsent()) { console.log('[Analytics] SKIPPED: no consent'); return }
 
+    console.log('[Analytics] INITIALIZED - tracking started')
     this.isInitialized = true
     this.startNewSession()
 
@@ -120,13 +122,16 @@ class AnalyticsTracker {
     }
     this.eventQueue = []
 
+    console.log('[Analytics] Flushing', payload.events.length, 'events to', `${this.endpoint}/events`)
     fetch(`${this.endpoint}/events`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       keepalive: true,
-    }).catch(() => {
-      // Silently fail — analytics should never break the store
+    }).then(r => {
+      console.log('[Analytics] Flush response:', r.status)
+    }).catch((err) => {
+      console.error('[Analytics] Flush FAILED:', err.message)
     })
   }
 
