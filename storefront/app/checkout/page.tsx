@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useCheckout, CheckoutStep, ShippingAddress } from '@/hooks/use-checkout'
@@ -11,12 +12,23 @@ import { useAuth } from '@/hooks/use-auth'
 import { useCart } from '@/hooks/use-cart'
 import { ShoppingBag, ChevronRight, Loader2, Check, ArrowLeft, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import { StripePaymentForm } from '@/components/checkout/stripe-payment-form'
 import { PromoCodeInput } from '@/components/checkout/promo-code-input'
 import { getProductImage } from '@/lib/utils/placeholder-images'
 import { trackBeginCheckout } from '@/lib/analytics'
 import { formatPrice } from '@/lib/utils/format-price'
 import type { ShippingOption, CartLineItem } from '@/types'
+
+const StripePaymentForm = dynamic(
+  () => import('@/components/checkout/stripe-payment-form').then(m => m.StripePaymentForm),
+  {
+    loading: () => (
+      <div className="border rounded-sm p-6 flex items-center justify-center">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-sm text-muted-foreground">Loading payment form...</span>
+      </div>
+    ),
+  }
+)
 
 const steps: { key: CheckoutStep; label: string }[] = [
   { key: 'shipping', label: 'Shipping' },

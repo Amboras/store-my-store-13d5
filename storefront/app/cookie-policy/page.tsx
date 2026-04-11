@@ -2,8 +2,7 @@
 
 import { usePolicies } from '@/hooks/use-policies'
 import { Loader2 } from 'lucide-react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { PolicyMarkdown } from '@/components/policy-markdown'
 
 export default function CookiePolicyPage() {
   const { policies, isLoading } = usePolicies()
@@ -34,7 +33,7 @@ export default function CookiePolicyPage() {
       <div className="container-custom py-section max-w-3xl">
         {policy ? (
           <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{policy}</ReactMarkdown>
+            <PolicyMarkdown content={policy} />
           </div>
         ) : (
           <div className="space-y-8 text-sm text-muted-foreground leading-relaxed">

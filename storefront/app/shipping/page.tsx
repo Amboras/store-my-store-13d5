@@ -2,8 +2,7 @@
 
 import { usePolicies } from '@/hooks/use-policies'
 import { Loader2, Truck, RotateCcw, Package } from 'lucide-react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { PolicyMarkdown } from '@/components/policy-markdown'
 
 export default function ShippingPage() {
   const { policies, isLoading } = usePolicies()
@@ -35,7 +34,7 @@ export default function ShippingPage() {
       <div className="container-custom py-section max-w-3xl">
         {shippingPolicy ? (
           <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{shippingPolicy}</ReactMarkdown>
+            <PolicyMarkdown content={shippingPolicy} />
           </div>
         ) : (
           <div className="space-y-12">

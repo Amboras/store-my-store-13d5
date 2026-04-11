@@ -6,21 +6,23 @@ import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import AnnouncementBar from '@/components/layout/announcement-bar'
 import { AnalyticsProvider } from '@/components/analytics-provider'
-import CookieConsent from '@/components/cookie-consent'
 import { Toaster } from 'sonner'
 import { ElementPickerListener } from '@/components/element-picker-listener'
 import { ErrorBoundary } from '@/components/error-boundary'
+import dynamic from 'next/dynamic'
+
+const CookieConsent = dynamic(() => import('@/components/cookie-consent'))
 
 const heading = Lato({
   subsets: ['latin'],
-  weight: ['400', '700', '900'],
+  weight: ['400', '700'],
   variable: '--font-heading',
   display: 'swap',
 })
 
 const body = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600'],
   variable: '--font-body',
   display: 'swap',
 })
