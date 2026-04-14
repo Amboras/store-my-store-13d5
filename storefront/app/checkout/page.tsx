@@ -31,6 +31,19 @@ const StripePaymentForm = dynamic(
   }
 )
 
+const PayPalPaymentForm = dynamic(
+  () => import('@/components/checkout/paypal-payment-form').then(m => m.PayPalPaymentForm),
+  {
+    loading: () => (
+      <div className="border rounded-sm p-6 flex items-center justify-center">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-sm text-muted-foreground">Loading PayPal...</span>
+      </div>
+    ),
+    ssr: false,
+  }
+)
+
 const steps: { key: CheckoutStep; label: string }[] = [
   { key: 'shipping', label: 'Shipping' },
   { key: 'payment', label: 'Payment' },
@@ -535,11 +548,19 @@ export default function CheckoutPage() {
                       <span className="ml-2 text-sm text-muted-foreground">Initializing payment...</span>
                     </div>
                   ) : (
-                    <div className="border rounded-sm p-6">
-                      <p className="text-sm text-muted-foreground">
-                        This is a demo store. Orders are placed using the system payment provider — no real payment is processed.
-                      </p>
-                    </div>
+                    <PayPalPaymentForm
+                      amount={cart?.total || 0}
+                      currency={currency}
+                      isCompletingOrder={isUpdating}
+                      onPaymentSuccess={async () => {
+                        const order = await completeCheckout()
+                        if (order) {
+                          toast.success('Order placed successfully! 🎉')
+                          router.push(buildSuccessUrl(order))
+                        }
+                      }}
+                      onError={(msg) => { clearError(); toast.error(msg) }}
+                    />
                   )}
                 </section>
 
@@ -548,12 +569,6 @@ export default function CheckoutPage() {
                     <ArrowLeft className="h-4 w-4" />
                     Back
                   </button>
-                  {!stripeConfig.paymentReady && (
-                    <button onClick={handlePlaceOrder} disabled={isUpdating} className="flex-1 bg-foreground text-background py-3.5 text-sm font-semibold uppercase tracking-wide hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2">
-                      {isUpdating ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                      Place Order
-                    </button>
-                  )}
                 </div>
               </div>
             )}
