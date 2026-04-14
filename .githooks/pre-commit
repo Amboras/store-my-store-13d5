@@ -7,7 +7,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT/storefront"
 
 echo "→ type-check"
-bun run type-check
+pnpm run type-check
 
 echo "→ lint"
-bun run lint
+pnpm run lint
