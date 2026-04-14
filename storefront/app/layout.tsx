@@ -30,10 +30,10 @@ const body = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Store — Modern Commerce',
-    template: '%s | Store',
+    default: 'LUMEVO — Premium Lifestyle & Wellness',
+    template: '%s | LUMEVO',
   },
-  description: 'Discover curated products crafted with care. A modern ecommerce experience.',
+  description: 'Shop trending lifestyle, wellness, tech & beauty products. Free shipping on orders over $75. LUMEVO — Elevate Your Everyday.',
 }
 
 export default function RootLayout({
